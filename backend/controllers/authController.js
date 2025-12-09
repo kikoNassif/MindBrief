@@ -30,7 +30,7 @@ export const register = async (req, res, next) => {
     }
 
     // Create user
-    const user = await user.create({
+    const user = await User.create({
       username,
       email,
       password,
@@ -49,7 +49,7 @@ export const register = async (req, res, next) => {
           profileImage: user.profileImage,
           createdAt: user.createdAt,
         },
-        tokeb,
+        token,
       },
       message: "User registered successfully"
     });
