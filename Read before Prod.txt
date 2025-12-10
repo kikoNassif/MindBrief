@@ -1,0 +1,3 @@
+In the back end -> controllers -> documentController.js
+
+switch processPDF to a queue like Bull

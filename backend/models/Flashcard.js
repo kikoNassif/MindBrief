@@ -26,7 +26,7 @@ const flashcardSchema = new mongoose.Schema(
           defalt: null,
         },
         reviewCount: {
-          type, Number,
+          type: Number,
           default: 0,
         }, 
         isStarted: {
