@@ -23,13 +23,13 @@ const flashcardSchema = new mongoose.Schema(
         },
         lastReviewed: {
           type: Date,
-          defalt: null,
+          default: null,
         },
         reviewCount: {
           type: Number,
           default: 0,
         }, 
-        isStarted: {
+        isStarred: {
           type: Boolean,
           default: false,
         },
