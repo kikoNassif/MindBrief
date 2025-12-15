@@ -11,7 +11,7 @@ const chatHistorySchema = new mongoose.Schema({
     ref: 'Document',
     required: true
   },
-  message: [{
+  messages: [{
     role: {
       type: String,
       enum: ['user', 'assistant'],
@@ -25,7 +25,7 @@ const chatHistorySchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     },
-    relaventChunks: {
+    relevantChunks: {
       type: [Number],
       default: []
     }
