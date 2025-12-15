@@ -68,56 +68,52 @@ export const generateFlashcards = async (req, res, next) => {
 // @access  Private
 export const generateQuiz = async (req, res, next) => {
   try {
-    try {
-      const { documentId, numQuestions = 5, title } = req.body;
+    const { documentId, numQuestions = 5, title } = req.body;
 
-      if (!documentId) {
-        return res.status(400).json({
-          success: false,
-          error: 'Please privide documentId',
-          statusCode: 400
-        });
-      }
-
-      const document = await Document. findOne({
-        _id: documentId,
-        userId: req.user._id,
-        status: 'ready'
+    if (!documentId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please privide documentId',
+        statusCode: 400
       });
-
-      if (!document) {
-        return res.status(404).json({
-          success: false,
-          error: 'Document not found or not ready',
-          statusCode: 404
-        });
-      }
-
-      // Generate quiz using Gemini
-      const questions = await geminiService.generateQuiz(
-        document.extractedText,
-      parseInt(numQuestions)
-      );
-
-      // Save to database
-      const quiz = await Quiz.create({
-        userId: req.user._id,
-        documentId: document._id,
-        title: title || `${document.title} - Quiz`,
-        questions: questions,
-        totalQuestions: questions.length,
-        userAnswers: [],
-        score: 0
-      });
-
-      res.status(201).json({
-        success: true,
-        data: quiz,
-        message: 'Quiz generated successfully'
-      });
-    } catch (error) {
-      next(error)
     }
+
+    const document = await Document. findOne({
+      _id: documentId,
+      userId: req.user._id,
+      status: 'ready'
+    });
+
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        error: 'Document not found or not ready',
+        statusCode: 404
+      });
+    }
+
+    // Generate quiz using Gemini
+    const questions = await geminiService.generateQuiz(
+      document.extractedText,
+    parseInt(numQuestions)
+    );
+
+    // Save to database
+    const quiz = await Quiz.create({
+      userId: req.user._id,
+      documentId: document._id,
+      title: title || `${document.title} - Quiz`,
+      questions: questions,
+      totalQuestions: questions.length,
+      userAnswers: [],
+      score: 0
+    });
+
+    res.status(201).json({
+      success: true,
+      data: quiz,
+      message: 'Quiz generated successfully'
+    });
   } catch (error) {
     next(error);
   }
@@ -128,7 +124,42 @@ export const generateQuiz = async (req, res, next) => {
 // @access  Private
 export const generateSummary = async (req, res, next) => {
   try {
-    
+    const { documentId } = req.body;
+
+    if (!documentId) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide documentId',
+        statusCode: 400
+      });
+    }
+
+    const document = await Document.findOne({
+      _id: documentId,
+      userId: req.user._id,
+      status: 'ready'
+    });
+
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        error: 'Document not found or not ready',
+        statusCode: 404
+      });
+    }
+
+    // Generate summary using Gemini
+    const summary = await geminiService.generateSummary(document.extractedText);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        documentId: document._id,
+        title: document.title,
+        summary
+      },
+      message: 'Summary generated successfully'
+    });
   } catch (error) {
     next(error);
   }
