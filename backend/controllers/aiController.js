@@ -321,7 +321,7 @@ export const getChatHistory = async (req, res, next) => {
     if (!chatHistory) {
       return res.status(200).json({
         success: true,
-        date: [], // Return an empty array if no chat history is found
+        data: [], // Return an empty array if no chat history is found
         message: 'No Chat history was found for this document'
       });
     }
